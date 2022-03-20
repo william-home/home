@@ -1,2 +1,2 @@
 # home
-陈昱昇的个人网站 - Ruan William Personal Website
+Ruan William Personal Website
