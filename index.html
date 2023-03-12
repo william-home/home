@@ -11,95 +11,119 @@
             margin: 0;
         }
 
-        body,html {
-            height: 100%;
-            width: 100%;
-        }
-
         body {
-            background-image: url('./banner.jpeg');
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
+            overflow: hidden;
         }
 
-        .title{
-            position:    absolute;
-            left: 50%;
-            top: 50%;
-            margin-top: -30px;
-            margin-left: -132px;
-            width: 264px;
-            height: 60px;
+        li {
+            list-style: none;
+            width: 20%;
+            height: 20vh;
+            line-height: 20vh;
+            text-align: center;
+            border: 1px solid #000;
+            box-sizing: border-box;
         }
-        .opening{
-            width: 264px;
-            font-size: 22px;
-            font-weight: 700;
+
+        ul {
+            display: flex;
+            flex-wrap: wrap-reverse;
         }
-        .starting{
-            width: 264px;
-            margin-left: 25px;
-            font-weight: 500;
-        }
-        
     </style>
 </head>
 <body>
-    <div class="title">
-        <div class="opening">歡迎來到陳昱升的個人網站</div>  
-        <div class="starting">Welcome to William's home</div> 
-    </div>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>陳昱升的個人網站</title>
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-        }
+<ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+    <li>9</li>
+    <li>10</li>
+    <li>11</li>
+    <li>12</li>
+    <li>13</li>
+    <li>14</li>
+    <li>15</li>
+    <li>16</li>
+    <li>17</li>
+    <li>18</li>
+    <li>19</li>
+    <li>20</li>
+    <li>21</li>
+    <li>22</li>
+    <li>23</li>
+    <li>24</li>
+    <li>25</li>
+</ul>
 
-        body,html {
-            height: 100%;
-            width: 100%;
-        }
+<script>
+    var liList = document.getElementsByTagName('li');
+    var numList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
-        body {
-            background-image: url('./banner.jpeg');
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-        }
 
-        .title{
-            position:    absolute;
-            left: 50%;
-            top: 50%;
-            margin-top: -30px;
-            margin-left: -132px;
-            width: 264px;
-            height: 60px;
+    for (var i = 0; i < liList.length; i++) {
+        var index = Math.ceil(Math.random() * numList.length) - 1;
+        liList[i].innerHTML = `${numList.splice(index, 1)}`
+        liList[i].onclick = cliBtn
+    }
+
+
+    var preNum = 0;
+    var startTime = null;
+    var level = [' SSS 优 ', '良', '中', '差']
+
+    function cliBtn() {
+        if (preNum === 0 && startTime === null) {
+            startTime = Date.now()
         }
-        .opening{
-            width: 264px;
-            font-size: 22px;
-            font-weight: 700;
+        var nextNum = Number(this.innerHTML);
+        if (preNum + 1 === nextNum) {
+            if (preNum + 1 === 25) {
+                return finish()
+            }
+            preNum++
+        } else {
+            alert('please start from 1')
+            preNum = 0
         }
-        .starting{
-            width: 264px;
-            margin-left: 25px;
-            font-weight: 500;
+        console.log(preNum)
+    }
+
+    function finish() {
+        var endTime = parseFloat((Date.now() - startTime) / 1000);
+        var levelIndex = 3;
+        if (endTime < 8) {
+            levelIndex = 0
+            comment('你一定是个厉害的人,你的专注力非常厉害')
+        } else if (endTime < 16) {
+            levelIndex = 1
+            comment('你的专注力还能提升,要多加努力')
+        } else if (endTime < 26) {
+            levelIndex = 2
+            comment('你的专注力需要提升,请注意训练')
+        }else if (endTime < 36) {
+            levelIndex = 3
+            comment('你的专注力非常有问题，请一定要多多训练')
         }
-        
-    </style>
-</head>
-<body>
-    <div class="title">
-        <div class="opening">歡迎來到陳昱升的個人網站</div>  
-        <div class="starting">Welcome to William's home</div> 
-    </div>
+        queueMicrotask(()=>{
+            alert(`总用时${ endTime }秒,你的评级是：${level[levelIndex]}`);
+        })
+    }
+
+    function comment (content){
+        queueMicrotask(()=>{
+            queueMicrotask(()=>{
+                alert(content);
+                alert('再来一次');
+                history.go(-1);
+            })
+        })
+    }
+</script>
+
 </body>
 </html>
