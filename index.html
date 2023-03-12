@@ -109,18 +109,15 @@
             levelIndex = 3
             comment('你的专注力非常有问题，请一定要多多训练')
         }
-        queueMicrotask(()=>{
-            alert(`总用时${ endTime }秒,你的评级是：${level[levelIndex]}`);
-        })
+        alert(`总用时${ endTime }秒,你的评级是：${level[levelIndex]}`);
+
     }
 
     function comment (content){
-        queueMicrotask(()=>{
-            queueMicrotask(()=>{
-                alert(content);
-                alert('再来一次');
-                history.go(-1);
-            })
+        setTimeout(()=>{
+            alert(content);
+            alert('再来一次');
+            history.go(0);
         })
     }
 </script>
