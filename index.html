@@ -23,6 +23,8 @@
             text-align: center;
             border: 1px solid #000;
             box-sizing: border-box;
+            font-size: 60px;
+            font-weight: bolder;
         }
 
         ul {
@@ -68,7 +70,7 @@
     for (var i = 0; i < liList.length; i++) {
         var index = Math.ceil(Math.random() * numList.length) - 1;
         liList[i].innerHTML = `${numList.splice(index, 1)}`
-        liList[i].onclick = cliBtn
+        liList[i].ontouchstart = cliBtn
     }
 
 
@@ -90,7 +92,6 @@
             alert('please start from 1')
             preNum = 0
         }
-        console.log(preNum)
     }
 
     function finish() {
