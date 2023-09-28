@@ -1,0 +1,257 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List </title>
+    <meta name="keywords" content="在线Todo,网页todo,备忘录, ,无需注册登陆,即开即用,便签, 提醒, 日程, 记事本, 记事, 待办事件,online todolist">
+    <meta name="description" content="一款优秀的设计简洁的todolist网页版本应用,无需注册,数据存储在H5浏览器本地缓存.技术基于Vue2.x,提供工作和生活辅助！">
+    <link href="css/normalize.css" rel="stylesheet" media="screen">
+    <link href="css/style.min.css?v1.0" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+    <style>
+        .bar-message-text .random-btn {
+            width: 22px;
+            position: relative;
+            top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="bg-pattern"></div>
+<div class="todo-wrapper">
+    <div id="todo-app" class="todo-app">
+        <div class="container header ">
+            <div class="todo-input">
+                <h1 class="title"><img src="img/todo.svg" alt="" class="title-1">
+                    <div class="ani-vector"><span></span> <span></span></div>
+                    <div class="pendulums">
+                        <div class="pendulum">
+                            <div class="bar"></div>
+                            <div class="motion">
+                                <div class="string"></div>
+                                <div class="weight"></div>
+                            </div>
+                        </div>
+                        <div class="pendulum shadow">
+                            <div class="bar"></div>
+                            <div class="motion">
+                                <div class="string"></div>
+                                <div class="weight"></div>
+                            </div>
+                        </div>
+                    </div>
+                </h1>
+                <div class="add-content-wrapper">
+                    <input type="text" rows="3" placeholder="新增待办事项..." class="add-content">
+                    <button type="button" class="btn submit-btn">提交</button>
+                </div>
+            </div>
+        </div>
+        <div class="container main">
+            <div class="todo-list-box">
+                <div class="bar-message">
+                    <div class="bar-message-text">
+                        <span>遇事不决，随机解决！</span>
+                        <img class="random-btn" src="img/lottery_decision.png" alt="随机">
+                        <span>🤏🤏</span>
+                    </div>
+                </div>
+                <ul class="empty-tips">
+                    <li> 添加你的第一个代办事项！📝</li>
+                    <li>✔️ 可以新增，删除TODO,管理代办事！</li>
+                    <li>✔️ 遇事不决，量子力学，随机解决！</li>
+                    <li>✔️ 对未完成的TODO可以随机排序!</li>
+                    <li>🔒 所有的TODO数据安全存储在本地</li>
+                </ul>
+                <ul class="todo-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var doneTodoList = JSON.parse(localStorage.getItem('doneTodoList') || '[]');
+        var unDoneTodoList = JSON.parse(localStorage.getItem('unDoneTodoList') || '[]');
+        var todoListDOC = document.querySelector('.todo-list');
+        var randomBtn = document.querySelector('.random-btn');
+        var doneTListContent = doneTodoList.map((item, index) => {
+            return `<li class="todo-item todo-item-done animate__animated" data='${JSON.stringify(["done",index])}'>
+                        <div class="todo-content completed">${item}</div>
+                        <div class="todo-btn btn-unfinish">
+                            <img src="/img/y.svg" class="icon-finish">
+                        </div>
+                        <div class="todo-btn btn-delete">
+                            <img src="/img/x.svg">
+                        </div>
+                    </li>
+            `
+        }).join('');
+        var unDoneTListContent = unDoneTodoList.map((item, index) => {
+            return `<li class="todo-item todo-item-undone animate__animated" data='${JSON.stringify(["unDone",index])}'>
+                        <div class="todo-content">
+                            <span class="todo-index">${index + 1}. </span>
+                            <span class="todo-txt">${item}</span>
+                        </div>
+                        <div class="todo-btn btn-finish"></div>
+                        <div class="todo-btn btn-delete">
+                            <img src="/img/x.svg" alt="删除">
+                        </div>
+                    </li>
+            `
+        }).join('')
+        todoListDOC.innerHTML = `${unDoneTListContent}${doneTListContent}`
+        if (todoListDOC.innerHTML !== '') {
+            $('.empty-tips').remove()
+        }
+
+        // 随机排序
+        randomBtn.ontouchstart = function () {
+            if (randomBtn.flag) return;
+            randomBtn.flag = true;
+            if (!unDoneTodoList.length) return;
+            randomUnDoneTodoList();
+            animateChangeTodo(() => randomBtn.flag = false)
+        }
+
+        // 删除todo
+        $('.todo-list').on('touchstart', '.btn-delete', function () {
+            var flag = confirm('你确定要删除这个TODO吗?')
+            if (!flag) return;
+            var strData = $(this).parents('.todo-item').attr('data');
+            var [key, index] = JSON.parse(strData);
+            if (key === 'unDone') {
+                unDoneTodoList.splice(index, 1, '')
+                setTodoList('unDoneTodoList', unDoneTodoList)
+                $(this).parents('.todo-item').remove();
+            }
+            if (key === 'done') {
+                doneTodoList.splice(index, 1, '')
+                setTodoList('doneTodoList', doneTodoList)
+                $(this).parents('.todo-item').remove();
+            }
+        })
+
+        // 新增todo
+        $('.submit-btn').on('touchstart', function () {
+            if ($('.empty-tips').length) {
+                $('.empty-tips').remove()
+            }
+            var newTdoItem = $('.add-content').val();
+            $('.add-content').val('');
+            if (newTdoItem === '') return;
+            unDoneTodoList.push(newTdoItem)
+            setTodoList('unDoneTodoList', unDoneTodoList)
+            var index = unDoneTodoList.filter(f => f).length
+            $(todoListDOC).prepend(`
+                    <li class="todo-item todo-item-undone animate__animated" data='${JSON.stringify(["unDone",unDoneTodoList.length - 1])}'>
+                        <div class="todo-content">
+                            <span class="todo-index">${index}. </span>
+                            <span class="todo-txt">${newTdoItem}</span>
+                        </div>
+                        <div class="todo-btn btn-finish"></div>
+                        <div class="todo-btn btn-delete">
+                            <img src="/img/x.svg" alt="删除">
+                        </div>
+                    </li>
+            `)
+
+        })
+
+        // 完成todo
+        $('.todo-list').on('touchstart', '.btn-finish', function () {
+            var strData = $(this)
+                .removeClass('btn-finish')
+                .addClass('btn-unfinish')
+                .parents('.todo-item')
+                .removeClass('todo-item-undone')
+                .addClass('todo-item-done')
+                .children('.todo-content')
+                .addClass('completed')
+                .parents('.todo-item')
+                .attr('data')
+
+            var text = $(this).parents('.todo-item').find('.todo-txt').text();
+            var dom = $(this).parents('.todo-item').attr('data',JSON.stringify(['done',doneTodoList.length])).clone();
+            $(this).parents('.todo-item').remove()
+            $('.todo-list').append(dom)
+
+            var [key, index] = JSON.parse(strData);
+            unDoneTodoList.splice(index, 1, '');
+            setTodoList('unDoneTodoList', unDoneTodoList);
+            doneTodoList.push(text);
+            setTodoList('doneTodoList', doneTodoList);
+        })
+
+        function randomUnDoneTodoList() {
+            var newTodoList = []
+            var loop = unDoneTodoList.length
+            for (let i = 0; i < loop; i++) {
+                var r = randomIndex(0, unDoneTodoList.length)
+                newTodoList.push(
+                    ...unDoneTodoList.splice(r, 1)
+                )
+            }
+            unDoneTodoList = newTodoList;
+            setTodoList('unDoneTodoList', newTodoList);
+        }
+
+        function randomIndex(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function animateChangeTodo(fn) {
+            var i = 0;
+            var unDoneTListDOC = document.querySelectorAll('.todo-item-undone');
+            $(unDoneTListDOC[i]).addClass('animate__bounceOutRight');
+            var unDoneTodoListTmp = unDoneTodoList.filter(f=>f)
+            var IntervalID = setInterval(() => {
+                i++;
+                if (i >= unDoneTListDOC.length) {
+                    changeTodoItem(unDoneTListDOC[i - 1], unDoneTodoListTmp[i - 1])
+                    showTodoList(unDoneTListDOC, fn)
+                    return clearInterval(IntervalID)
+                }
+                $(unDoneTListDOC[i]).addClass('animate__bounceOutRight');
+                changeTodoItem(unDoneTListDOC[i - 1], unDoneTodoListTmp[i - 1])
+            }, 800)
+        };
+
+        function changeTodoItem(todoItem, text) {
+            $(todoItem)
+                .addClass('animate__bounceOutRight')
+                .find('.todo-txt')
+                .empty()
+                .append(text)
+        }
+
+        function showTodoList(unDoneTListDOC, fn) {
+            var arrTodoIndex = unDoneTodoList.filter(f=>f).map((item, index) => index);
+            changeShowTodoItem(arrTodoIndex, unDoneTListDOC)
+            var IntervalShowID = setInterval(() => {
+                if (!arrTodoIndex.length) {
+                    fn();
+                    return clearInterval(IntervalShowID)
+                }
+                changeShowTodoItem(arrTodoIndex, unDoneTListDOC)
+            }, 800)
+        }
+
+        function changeShowTodoItem(indexList, unDoneTListDOC) {
+            var [index] = indexList.splice(randomIndex(0, indexList.length), 1)
+            $(unDoneTListDOC[index])
+                .removeClass('animate__bounceOutRight')
+                .addClass('animate__backInLeft')
+        }
+
+        function setTodoList(key, todoList) {
+            localStorage.setItem(key, JSON.stringify(todoList.filter(f => f)))
+        }
+    })
+</script>
+
+
+</body>
+</html>
