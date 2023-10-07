@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>用户输入随机选择器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      display: block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    #history {
+      margin-top: 20px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .history-item button {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<h1>用户输入随机选择器</h1>
+<div class="container">
+  <label for="user-input">请输入选项，用空格分隔：</label>
+  <input type="text" id="user-input" placeholder="选项1 选项2 选项3">
+  <button id="generate-button">随机选择</button>
+  <p id="result"></p>
+  <div id="history">
+    <h2>随机选择历史记录</h2>
+    <ul id="history-list"></ul>
+  </div>
+</div>
+
+<script>
+  // 从localStorage中加载用户输入的内容和历史记录
+  const savedUserInput = localStorage.getItem("userInput");
+  if (savedUserInput) {
+    document.getElementById("user-input").value = savedUserInput;
+  }
+  let savedHistory = JSON.parse(localStorage.getItem("history")) || [];
+
+  // 更新历史记录显示
+  function updateHistory() {
+    const historyList = document.getElementById("history-list");
+    historyList.innerHTML = "";
+    for (let i = 0; i < savedHistory.length; i++) {
+      const listItem = document.createElement("li");
+      const historyItem = document.createElement("div");
+      historyItem.classList.add("history-item");
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "删除";
+      deleteButton.addEventListener("click", () => {
+        // 删除历史记录项
+        savedHistory.splice(i, 1);
+        // 更新历史记录显示和本地存储
+        updateHistory();
+        localStorage.setItem("history", JSON.stringify(savedHistory));
+      });
+      historyItem.textContent = savedHistory[i];
+      historyItem.appendChild(deleteButton);
+      listItem.appendChild(historyItem);
+      historyList.appendChild(listItem);
+    }
+  }
+  updateHistory();
+
+  document.getElementById("generate-button").addEventListener("click", function() {
+    const userInput = document.getElementById("user-input").value;
+
+    // 将用户输入的选项分割成数组，使用空格分隔，并过滤掉空白选项
+    const options = userInput.split(" ").map(option => option.trim()).filter(option => option !== "");
+
+    if (options.length > 0) {
+      // 从选项中随机选择一个
+      const randomOption = options[Math.floor(Math.random() * options.length)];
+
+      // 显示随机选择的结果
+      const resultText = `随机选择的结果是：${randomOption}`;
+      document.getElementById("result").textContent = resultText;
+
+      // 将随机选择结果添加到历史记录
+      savedHistory.push(resultText);
+      localStorage.setItem("history", JSON.stringify(savedHistory));
+      updateHistory();
+    } else {
+      // 如果没有有效选项，则显示提示信息
+      document.getElementById("result").textContent = "请输入至少一个选项。";
+    }
+
+    // 将用户输入的内容保存到localStorage
+    localStorage.setItem("userInput", userInput);
+  });
+</script>
+</body>
+</html>
