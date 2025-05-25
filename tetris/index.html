@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>俄罗斯方块</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>俄罗斯方块</h1>
+        </div>
+        
+        <div class="game-wrapper">
+            <div class="game-board-container">
+                <canvas id="game-board"></canvas>
+            </div>
+            
+            <div class="game-info">
+                <div class="next-piece-container">
+                    <h2>下一个</h2>
+                    <canvas id="next-piece"></canvas>
+                </div>
+                
+                <div class="score-container">
+                    <div class="score-item">
+                        <h3>分数</h3>
+                        <p id="score">0</p>
+                    </div>
+                    <div class="score-item">
+                        <h3>等级</h3>
+                        <p id="level">1</p>
+                    </div>
+                    <div class="score-item">
+                        <h3>行数</h3>
+                        <p id="lines">0</p>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="start-btn">开始游戏</button>
+                    <button id="pause-btn">暂停</button>
+                    <button id="reset-btn">重置</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mobile-controls">
+            <div class="mobile-controls-row">
+                <button id="rotate-btn" class="control-btn">旋转</button>
+            </div>
+            <div class="mobile-controls-row">
+                <button id="left-btn" class="control-btn">←</button>
+                <button id="down-btn" class="control-btn">↓</button>
+                <button id="right-btn" class="control-btn">→</button>
+            </div>
+            <div class="mobile-controls-row">
+                <button id="drop-btn" class="control-btn">快速下落</button>
+            </div>
+        </div>
+        
+        <div class="game-instructions">
+            <h3>操作说明</h3>
+            <p>电脑: 方向键控制，空格快速下落</p>
+            <p>手机: 使用屏幕下方的控制按钮</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
