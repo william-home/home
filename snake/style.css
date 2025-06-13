@@ -1,0 +1,292 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    touch-action: manipulation;
+}
+
+h1 {
+    color: #4a5568;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+}
+
+.score, .high-score {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.score span, .high-score span {
+    color: #38a169;
+}
+
+#gameCanvas {
+    border: 3px solid #4a5568;
+    border-radius: 10px;
+    background-color: #1a202c;
+    margin: 20px 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    touch-action: none;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+.control-buttons {
+    margin-bottom: 20px;
+}
+
+.control-buttons button {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin: 0 10px;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.control-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+.control-buttons button:active {
+    transform: translateY(0);
+}
+
+.control-buttons button:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.instructions {
+    background: #edf2f7;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #4299e1;
+}
+
+.instructions h3 {
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.instructions p {
+    margin: 5px 0;
+    color: #4a5568;
+}
+
+.game-over {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-over > div {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.game-over h2 {
+    color: #e53e3e;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.game-over p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #4a5568;
+}
+
+#restartBtn {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+#restartBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+/* 移动端方向控制 */
+.mobile-controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.direction-pad {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 200px;
+    height: 200px;
+}
+
+.direction-btn {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55px;
+    min-width: 55px;
+    padding: 8px;
+}
+
+.direction-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+.direction-btn:active,
+.direction-btn.pressed {
+    transform: translateY(0);
+    background: linear-gradient(135deg, #3182ce, #2c5aa0);
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.6);
+}
+
+/* 移动端触摸反馈 */
+@media (max-width: 768px) {
+    .direction-btn:active {
+        transform: scale(0.95);
+        background: linear-gradient(135deg, #3182ce, #2c5aa0);
+    }
+}
+
+.direction-btn.up {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.direction-btn.left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.center-space {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.direction-btn.right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.direction-btn.down {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+/* 在桌面端隐藏移动控制 */
+@media (min-width: 769px) {
+    .mobile-controls {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    #gameCanvas {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+    }
+    
+    .control-buttons button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 0.9em;
+    }
+    
+    /* 移动端显示方向控制 */
+    .mobile-controls {
+        display: flex;
+    }
+}
