@@ -152,8 +152,31 @@ class SnakeGame {
         this.ctx.fillStyle = '#48bb78';
         this.snake.forEach((segment, index) => {
             if (index === 0) {
-                // 蛇头用不同颜色
-                this.ctx.fillStyle = '#38a169';
+                // 蛇头用圆形
+                this.ctx.beginPath();
+                this.ctx.arc(
+                    segment.x * this.gridSize + this.gridSize/2,
+                    segment.y * this.gridSize + this.gridSize/2,
+                    this.gridSize/2 - 2,
+                    0,
+                    Math.PI * 2
+                );
+                this.ctx.fill();
+                
+                // 添加眼睛
+                this.ctx.fillStyle = 'white';
+                this.ctx.beginPath();
+                this.ctx.arc(
+                    segment.x * this.gridSize + this.gridSize/3,
+                    segment.y * this.gridSize + this.gridSize/3,
+                    2, 0, Math.PI*2
+                );
+                this.ctx.arc(
+                    segment.x * this.gridSize + 2*this.gridSize/3,
+                    segment.y * this.gridSize + this.gridSize/3,
+                    2, 0, Math.PI*2
+                );
+                this.ctx.fill();
             } else {
                 this.ctx.fillStyle = '#48bb78';
             }
